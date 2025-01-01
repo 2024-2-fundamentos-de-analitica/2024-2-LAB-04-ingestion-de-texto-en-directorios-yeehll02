@@ -4,8 +4,8 @@
 """
 Escriba el codigo que ejecute la accion solicitada en cada pregunta.
 """
-
-
+import glob
+import pandas as pd 
 def pregunta_01():
     """
     La información requerida para este laboratio esta almacenada en el
@@ -71,3 +71,38 @@ def pregunta_01():
 
 
     """
+    archivos_train_negative = glob.glob(f"files/input/train/negative/*.txt")
+    archivos_train_positive = glob.glob(f"files/input/train/positive/*.txt")
+    archivos_train_neutral = glob.glob(f"files/input/train/neutral/*.txt")
+    archivos_test_negative = glob.glob(f"files/input/test/negative/*.txt")
+    archivos_test_positive = glob.glob(f"files/input/test/positive/*.txt")
+    archivos_test_neutral = glob.glob(f"files/input/test/neutral/*.txt")
+
+    train_dataset = []
+    for archivo in archivos_train_negative:
+        with open(archivo, "r") as file:
+            train_dataset.append({"phrase": file.read(), "target": "negative"})
+    for archivo in archivos_train_positive:
+        with open(archivo, "r") as file:
+            train_dataset.append({"phrase": file.read(), "target": "positive"})
+    for archivo in archivos_train_neutral:
+        with open(archivo, "r") as file:
+            train_dataset.append({"phrase": file.read(), "target": "neutral"})
+    train_dataset = pd.DataFrame(train_dataset)
+    train_dataset.to_csv("files/output/train_dataset.csv", index=False)
+
+    test_dataset = []
+    for archivo in archivos_test_negative:
+        with open(archivo, "r") as file:
+            test_dataset.append({"phrase": file.read(), "target": "negative"})
+    for archivo in archivos_test_positive:
+        with open(archivo, "r") as file:
+            test_dataset.append({"phrase": file.read(), "target": "positive"})
+    for archivo in archivos_test_neutral:
+        with open(archivo, "r") as file:
+            test_dataset.append({"phrase": file.read(), "target": "neutral"})
+    test_dataset = pd.DataFrame(test_dataset)
+    test_dataset.to_csv("files/output/test_dataset.csv", index=False)
+
+    return train_dataset, test_dataset
+pregunta_01()
